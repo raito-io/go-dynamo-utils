@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"dynamodb_utils/inputbuilder/expressionutils"
+	"github.com/raito-io/go-dynamo-utils/inputbuilder/expressionutils"
 )
 
 func TestAttributeName_Marshal(t *testing.T) {

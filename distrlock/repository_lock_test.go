@@ -14,7 +14,7 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 
-	"dynamodb_utils/distrlock/mocks"
+	"github.com/raito-io/go-dynamo-utils/distrlock/mocks"
 )
 
 func TestLock_TryLock_Success(t *testing.T) {

@@ -4,7 +4,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 
-	"dynamodb_utils/inputbuilder/expressionutils"
+	"github.com/raito-io/go-dynamo-utils/inputbuilder/expressionutils"
 )
 
 func Marshal(item ExpressionItem, attributeNames map[string]string, attributeValues map[string]types.AttributeValue) (*string, error) {

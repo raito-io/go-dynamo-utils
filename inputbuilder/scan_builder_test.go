@@ -8,8 +8,8 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/stretchr/testify/require"
 
-	"dynamodb_utils/inputbuilder/conditionexpression"
-	"dynamodb_utils/inputbuilder/expressionutils"
+	"github.com/raito-io/go-dynamo-utils/inputbuilder/conditionexpression"
+	"github.com/raito-io/go-dynamo-utils/inputbuilder/expressionutils"
 )
 
 func TestScanBuilder_Build(t *testing.T) {

@@ -1,6 +1,6 @@
-module dynamodb_utils
+module github.com/raito-io/go-dynamo-utils
 
-go 1.19
+go 1.18
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.17.3

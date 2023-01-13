@@ -10,7 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 
-	"dynamodb_utils/utils"
+	"github.com/raito-io/go-dynamo-utils/utils"
 )
 
 var SkString = &types.AttributeValueMemberS{Value: "##LOCK##"}

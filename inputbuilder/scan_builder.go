@@ -6,7 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 
-	"dynamodb_utils/inputbuilder/conditionexpression"
+	"github.com/raito-io/go-dynamo-utils/inputbuilder/conditionexpression"
 )
 
 type ScanBuilder struct {

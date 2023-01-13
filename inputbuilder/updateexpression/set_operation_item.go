@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"dynamodb_utils/inputbuilder/expressionutils"
+	"github.com/raito-io/go-dynamo-utils/inputbuilder/expressionutils"
 )
 
 type OperationItem interface {
@@ -107,7 +107,6 @@ func (l *ListAppendOperationItem) Marshal(path *expressionutils.OperationPath, a
 	attributeValues[attributeValueName] = l.Values
 
 	return fmt.Sprintf("list_append(%s, %s)", attributeName, attributeValueName)
-
 }
 
 func (l *ListAppendOperationItem) IsFunctionOperation() {}
@@ -158,5 +157,6 @@ func marshalOperand(path *expressionutils.OperationPath, operand interface{}, at
 func marshalAttributeValue(path *expressionutils.OperationPath, value interface{}, attributeValues map[string]interface{}) string {
 	valueName := ":" + strings.ToLower(path.String())
 	attributeValues[valueName] = value
+
 	return valueName
 }

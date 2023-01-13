@@ -1,6 +1,10 @@
-name: CICD
-run-name: Running CI-CD
-on: [push]
+name: DynamoDB UTILS CI-CD
+run-name: Running CI-CD for DynamoDB UTILS
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
 
 jobs:
   build:
@@ -16,8 +20,19 @@ jobs:
           cache: true
           cache-dependency-path: go.sum
 
+      - name: Mod Tidy
+        run: go mod tidy
+
+      - nname: Linting
+        run: make lint
+
       - name: Build
         run: go build ./...
 
       - name: Test
-        run: go test ./...
+        run: make test
+
+#      - uses: codecov/codecov-action@v2
+#        with:
+#          token: ${{ secrets.CODECOV_TOKEN }}
+#          file: ./coverage.txt

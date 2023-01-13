@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"dynamodb_utils/inputbuilder/expressionutils"
+	"github.com/raito-io/go-dynamo-utils/inputbuilder/expressionutils"
 )
 
 type RangeKeyConditionExpressionItem interface {

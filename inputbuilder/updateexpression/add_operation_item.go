@@ -3,7 +3,7 @@ package updateexpression
 import (
 	"fmt"
 
-	"dynamodb_utils/inputbuilder/expressionutils"
+	"github.com/raito-io/go-dynamo-utils/inputbuilder/expressionutils"
 )
 
 func Add(path expressionutils.AttributePath, value interface{}) *AddOperationItem {

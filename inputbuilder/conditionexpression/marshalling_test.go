@@ -7,7 +7,7 @@ import (
 	"github.com/aws/smithy-go/ptr"
 	"github.com/stretchr/testify/require"
 
-	"dynamodb_utils/inputbuilder/expressionutils"
+	"github.com/raito-io/go-dynamo-utils/inputbuilder/expressionutils"
 )
 
 func TestMarshal(t *testing.T) {

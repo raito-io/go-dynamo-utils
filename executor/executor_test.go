@@ -11,7 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/stretchr/testify/require"
 
-	"dynamodb_utils/executor/mocks"
+	"github.com/raito-io/go-dynamo-utils/executor/mocks"
 )
 
 type ElementStruct struct {

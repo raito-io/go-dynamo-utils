@@ -8,9 +8,9 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/stretchr/testify/require"
 
-	"dynamodb_utils/inputbuilder/conditionexpression"
-	"dynamodb_utils/inputbuilder/expressionutils"
-	"dynamodb_utils/inputbuilder/updateexpression"
+	"github.com/raito-io/go-dynamo-utils/inputbuilder/conditionexpression"
+	"github.com/raito-io/go-dynamo-utils/inputbuilder/expressionutils"
+	"github.com/raito-io/go-dynamo-utils/inputbuilder/updateexpression"
 )
 
 func TestUpdateBuilder_BuildUpdateItemInput(t *testing.T) {
@@ -21,7 +21,7 @@ func TestUpdateBuilder_BuildUpdateItemInput(t *testing.T) {
 		Add                 []*updateexpression.AddOperationItem
 		Delete              []*updateexpression.DeleteOperationItem
 		Remove              []expressionutils.AttributePath
-		ConditionExpression *conditionexpression.ExpressionItem
+		ConditionExpression conditionexpression.ExpressionItem
 	}
 	tests := []struct {
 		name           string
@@ -101,7 +101,7 @@ func TestUpdateBuilder_BuildUpdateTransactItem(t *testing.T) {
 		Add                 []*updateexpression.AddOperationItem
 		Delete              []*updateexpression.DeleteOperationItem
 		Remove              []expressionutils.AttributePath
-		ConditionExpression *conditionexpression.ExpressionItem
+		ConditionExpression conditionexpression.ExpressionItem
 	}
 	tests := []struct {
 		name           string

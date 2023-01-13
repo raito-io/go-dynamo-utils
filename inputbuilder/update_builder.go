@@ -9,9 +9,9 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 
-	"dynamodb_utils/inputbuilder/conditionexpression"
-	"dynamodb_utils/inputbuilder/expressionutils"
-	"dynamodb_utils/inputbuilder/updateexpression"
+	"github.com/raito-io/go-dynamo-utils/inputbuilder/conditionexpression"
+	"github.com/raito-io/go-dynamo-utils/inputbuilder/expressionutils"
+	"github.com/raito-io/go-dynamo-utils/inputbuilder/updateexpression"
 )
 
 type UpdateBuilder struct {
@@ -23,7 +23,7 @@ type UpdateBuilder struct {
 	Delete []*updateexpression.DeleteOperationItem
 	Remove []expressionutils.AttributePath
 
-	ConditionExpression *conditionexpression.ExpressionItem
+	ConditionExpression conditionexpression.ExpressionItem
 }
 
 func NewUpdateBuilder() *UpdateBuilder {
@@ -60,11 +60,11 @@ func (b *UpdateBuilder) AppendRemove(removeOperations ...expressionutils.Attribu
 	b.Remove = append(b.Remove, removeOperations...)
 }
 
-func (b *UpdateBuilder) WithConditionExpression(conditionExpression *conditionexpression.ExpressionItem) {
+func (b *UpdateBuilder) WithConditionExpression(conditionExpression conditionexpression.ExpressionItem) {
 	b.ConditionExpression = conditionExpression
 }
 
-func (b *UpdateBuilder) build(tableName **string, key *map[string]types.AttributeValue, updateExpression **string, expressionAttributeNames *map[string]string, expressionAttributeValues *map[string]types.AttributeValue) error {
+func (b *UpdateBuilder) build(tableName **string, key *map[string]types.AttributeValue, updateExpression **string, expressionAttributeNames *map[string]string, expressionAttributeValues *map[string]types.AttributeValue) error { //nolint:gocritic
 	if b.TableName == "" && *tableName == nil {
 		return errors.New("tableName may not be empty")
 	}
@@ -105,6 +105,7 @@ func (b *UpdateBuilder) build(tableName **string, key *map[string]types.Attribut
 		path := expressionutils.OperationPath{
 			CurrentOperation: "SET",
 		}
+
 		updateExpressionBuilder.WriteString("SET ")
 
 		for i, setOperation := range b.Set {
@@ -120,6 +121,7 @@ func (b *UpdateBuilder) build(tableName **string, key *map[string]types.Attribut
 		path := expressionutils.OperationPath{
 			CurrentOperation: "ADD",
 		}
+
 		updateExpressionBuilder.WriteString(" ADD ")
 
 		for i, addOperation := range b.Add {
@@ -135,6 +137,7 @@ func (b *UpdateBuilder) build(tableName **string, key *map[string]types.Attribut
 		path := expressionutils.OperationPath{
 			CurrentOperation: "DELETE",
 		}
+
 		updateExpressionBuilder.WriteString(" DELETE ")
 
 		for i, deleteOperation := range b.Delete {

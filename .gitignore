@@ -262,3 +262,10 @@ Temporary Items
 
 # End of https://www.toptal.com/developers/gitignore/api/go,intellij,macos,linux,goland
 .idea
+
+coverage.out.tmp
+coverage.txt
+coverage.html
+
+/executor/mocks/
+/distrlock/mocks/

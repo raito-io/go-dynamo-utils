@@ -3,7 +3,7 @@ package conditionexpression
 import (
 	"strings"
 
-	"dynamodb_utils/inputbuilder/expressionutils"
+	"github.com/raito-io/go-dynamo-utils/inputbuilder/expressionutils"
 )
 
 type ExpressionOperand interface {
@@ -22,6 +22,7 @@ func MarshalOperand(path *expressionutils.OperationPath, valueNamePostfix string
 func MarshalValue(path *expressionutils.OperationPath, valueNamePostfix string, value interface{}, attributeValues map[string]interface{}) string {
 	valueName := AttributeNameToValueName(path, valueNamePostfix)
 	attributeValues[valueName] = value
+
 	return valueName
 }
 
