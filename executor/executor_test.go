@@ -81,10 +81,10 @@ func TestExecutor_Query(t *testing.T) {
 	lock := mocks.NewLock(t)
 	lock.EXPECT().Refresh(ctx).Return(nil).Twice()
 
-	executor := NewExecutor(dynamodbClientMock)
+	executor := New(dynamodbClientMock)
 
 	// When
-	outputChannel := executor.Query(ctx, &initialQuery, WithUnmarhshalToItemMapFn[ElementStruct](), WithLock(lock))
+	outputChannel := executor.Query(ctx, &initialQuery, WithUnmarshalToItemMapFn[ElementStruct](), WithLock(lock))
 
 	// Then
 	requireChannelWithData(t, cancelFn, items, outputChannel)
@@ -147,7 +147,7 @@ func TestExecutor_Query_NoMapping(t *testing.T) {
 		ExclusiveStartKey:         lastEvaluatedKey,
 	}).Return(&dynamodb.QueryOutput{Items: items[2:4]}, nil).Once()
 
-	executor := NewExecutor(dynamodbClientMock)
+	executor := New(dynamodbClientMock)
 
 	// When
 	outputChannel := executor.Query(ctx, &initialQuery)
@@ -207,10 +207,10 @@ func TestExecutor_Scan(t *testing.T) {
 		ExclusiveStartKey: lastEvaluatedKey,
 	}).Return(&dynamodb.ScanOutput{Items: marshalElements(t, items[2:4])}, nil).Once()
 
-	executor := NewExecutor(dynamodbClientMock)
+	executor := New(dynamodbClientMock)
 
 	// When
-	outputChannel := executor.Scan(ctx, &initialQuery, WithUnmarhshalToItemMapFn[ElementStruct]())
+	outputChannel := executor.Scan(ctx, &initialQuery, WithUnmarshalToItemMapFn[ElementStruct]())
 
 	// Then
 	requireChannelWithData(t, cancelFn, items, outputChannel)
@@ -267,7 +267,7 @@ func TestExecutor_Scan_NoMapping(t *testing.T) {
 		ExclusiveStartKey: lastEvaluatedKey,
 	}).Return(&dynamodb.ScanOutput{Items: items[2:4]}, nil).Once()
 
-	executor := NewExecutor(dynamodbClientMock)
+	executor := New(dynamodbClientMock)
 
 	// When
 	outputChannel := executor.Scan(ctx, &initialQuery)
@@ -308,7 +308,7 @@ func marshalElements(t *testing.T, items []ElementStruct) []map[string]types.Att
 	return marshalledItems
 }
 
-func requireChannelWithData[T any](t *testing.T, cancelFn func(), expected []T, channel chan interface{}) {
+func requireChannelWithData[T any](t *testing.T, cancelFn func(), expected []T, channel <-chan interface{}) {
 	t.Helper()
 
 	defer cancelFn()

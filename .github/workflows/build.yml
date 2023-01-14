@@ -1,4 +1,4 @@
-name: DynamoDB UTILS CI-CD
+name: Build DynamoDB UTILS CI-CD
 run-name: Running CI-CD for DynamoDB UTILS
 on:
   push:

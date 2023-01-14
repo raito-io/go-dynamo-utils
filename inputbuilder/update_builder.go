@@ -14,6 +14,7 @@ import (
 	"github.com/raito-io/go-dynamo-utils/inputbuilder/updateexpression"
 )
 
+// UpdateBuilder is a builder to create dynamodb.UpdateItemInput and types.Update objects
 type UpdateBuilder struct {
 	TableName string
 	Key       map[string]interface{}
@@ -26,40 +27,58 @@ type UpdateBuilder struct {
 	ConditionExpression conditionexpression.ExpressionItem
 }
 
+// NewUpdateBuilder creates a new and empty UpdateBuilder
 func NewUpdateBuilder() *UpdateBuilder {
 	return &UpdateBuilder{
 		Key: make(map[string]interface{}),
 	}
 }
 
+// WithTableName sets the table name on the Update Input object
 func (b *UpdateBuilder) WithTableName(tableName string) {
 	b.TableName = tableName
 }
 
+// WithKeyMap sets the key on the Update Input object.
+// The key of the map represents the key attribute names. The values of the map represents the attribute values.
+// The values of the map are marshalled when the update object is build.
+// If a value is of type types.AttributeValue, the marshaling will be skipped and the value is directly used instead.
 func (b *UpdateBuilder) WithKeyMap(key map[string]interface{}) {
 	b.Key = key
 }
 
+// WithKey appends the given key and value pair to the key defining the item to update
+// value will be marshalled during when the update object is build.
+// If the value is of type types.AttributeValue, the marshaling will be skipped and the value is directly used instead.
 func (b *UpdateBuilder) WithKey(attribute expressionutils.AttributePath, value interface{}) {
 	b.Key[string(attribute)] = value
 }
 
+// AppendSet appends DynamoDB SET operations to the update query
+// https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.UpdateExpressions.html#Expressions.UpdateExpressions.SET
 func (b *UpdateBuilder) AppendSet(setOperations ...*updateexpression.SetOperationItem) {
 	b.Set = append(b.Set, setOperations...)
 }
 
+// AppendAdd appends DynamoDB ADD operations to the update query
+// https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.UpdateExpressions.html#Expressions.UpdateExpressions.ADD
 func (b *UpdateBuilder) AppendAdd(addOperations ...*updateexpression.AddOperationItem) {
 	b.Add = append(b.Add, addOperations...)
 }
 
+// AppendDelete appends DynamoDB DELETE operations to the update query
+// https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.UpdateExpressions.html#Expressions.UpdateExpressions.DELETE
 func (b *UpdateBuilder) AppendDelete(deleteOperations ...*updateexpression.DeleteOperationItem) {
 	b.Delete = append(b.Delete, deleteOperations...)
 }
 
+// AppendRemove appends DynamoDB REMOVE operations to the update query
+// https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.UpdateExpressions.html#Expressions.UpdateExpressions.REMOVE
 func (b *UpdateBuilder) AppendRemove(removeOperations ...expressionutils.AttributePath) {
 	b.Remove = append(b.Remove, removeOperations...)
 }
 
+// WithConditionExpression sets the condition expression on the Update Input object
 func (b *UpdateBuilder) WithConditionExpression(conditionExpression conditionexpression.ExpressionItem) {
 	b.ConditionExpression = conditionExpression
 }
@@ -190,12 +209,14 @@ func (b *UpdateBuilder) build(tableName **string, key *map[string]types.Attribut
 	return nil
 }
 
+// BuildUpdateItemInput builds a dynamodb.UpdateItemInput object
 func (b *UpdateBuilder) BuildUpdateItemInput(input *dynamodb.UpdateItemInput) error {
 	err := b.build(&input.TableName, &input.Key, &input.UpdateExpression, &input.ExpressionAttributeNames, &input.ExpressionAttributeValues)
 
 	return err
 }
 
+// BuildUpdateTransactItem builds a types.Update object that can be used in a dynamodb.TransactWriteItemsInput object
 func (b *UpdateBuilder) BuildUpdateTransactItem(input *types.Update) error {
 	err := b.build(&input.TableName, &input.Key, &input.UpdateExpression, &input.ExpressionAttributeNames, &input.ExpressionAttributeValues)
 

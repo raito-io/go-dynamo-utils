@@ -21,6 +21,9 @@ type ValueOperation interface {
 	IsValueOperation()
 }
 
+// Set creates a SetOperationItem object representing a `SET p = value` DynamoDB expression
+// value can be a scalar, or it can be a ValueOperation or SetFunctionOperationItem
+// https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.UpdateExpressions.html#Expressions.UpdateExpressions.SET
 func Set(path expressionutils.AttributePath, value interface{}) *SetOperationItem {
 	return &SetOperationItem{
 		Path:  path,
@@ -40,6 +43,7 @@ func (o *SetOperationItem) Marshal(path *expressionutils.OperationPath, attribut
 	return fmt.Sprintf("%s = %s", attributeName, rightValueString)
 }
 
+// Addition creates a AdditionOperationItem representing a `operand + operand` DynamoDB expression.
 func Addition(left interface{}, right interface{}) *AdditionOperationItem {
 	return &AdditionOperationItem{
 		BinaryOperationItem: BinaryOperationItem{
@@ -57,6 +61,7 @@ func (o *AdditionOperationItem) Marshal(path *expressionutils.OperationPath, att
 	return o.marshal(AdditionOperation, path.ExtendPath("addition"), attributeNames, attributeValues)
 }
 
+// Subtraction creates a SubtractionOperationItem representing a `operand + operand` DynamoDB expression.
 func Subtraction(left interface{}, right interface{}) *SubtractionOperationItem {
 	return &SubtractionOperationItem{
 		BinaryOperationItem: BinaryOperationItem{
@@ -88,6 +93,7 @@ func (i *BinaryOperationItem) marshal(operation BinaryOperation, path *expressio
 
 func (i *BinaryOperationItem) IsValueOperation() {}
 
+// ListAppend creates a ListAppendOperationItem representing a `list_append(path, values)` DynamoDB expression
 func ListAppend(path expressionutils.AttributePath, values ...interface{}) *ListAppendOperationItem {
 	return &ListAppendOperationItem{
 		Path:   path,
@@ -111,6 +117,7 @@ func (l *ListAppendOperationItem) Marshal(path *expressionutils.OperationPath, a
 
 func (l *ListAppendOperationItem) IsFunctionOperation() {}
 
+// IfNotExists creates an IfNotExistsOperationItem object representing a `if_not_exists(path, value)` DynamoDB expression
 func IfNotExists(path expressionutils.AttributePath, value interface{}) *IfNotExistsOperationItem {
 	return &IfNotExistsOperationItem{
 		Path:  path,

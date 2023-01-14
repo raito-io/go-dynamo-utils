@@ -6,6 +6,8 @@ import (
 	"github.com/raito-io/go-dynamo-utils/inputbuilder/expressionutils"
 )
 
+// Add create an AddOperationItem object to representing a single `ADD` action
+// https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.UpdateExpressions.html#Expressions.UpdateExpressions.ADD
 func Add(path expressionutils.AttributePath, value interface{}) *AddOperationItem {
 	return &AddOperationItem{
 		Path:  path,

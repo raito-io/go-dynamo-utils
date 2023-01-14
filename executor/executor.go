@@ -27,6 +27,7 @@ type Lock interface {
 	Refresh(ctx context.Context) error
 }
 
+// Executor can execute DynamoDB query and scan executions while abstracting pagination and unmarshalling complexity
 type Executor struct {
 	client DynamodbClient
 }
@@ -40,33 +41,39 @@ type Options struct {
 	Lock Lock
 }
 
-func NewExecutor(client DynamodbClient) *Executor {
+// New creates a new DynamoDB query/scan executor. The executor will execute on the DynamodbClient given as client parameter.
+func New(client DynamodbClient) *Executor {
 	return &Executor{client: client}
 }
 
-func (e *Executor) Query(ctx context.Context, query *dynamodb.QueryInput, optFns ...func(options *Options)) chan interface{} {
+// Query executes a DynamoDB query. The method returns a channel containing the objects or errors if the execution or unmarshalling fails
+func (e *Executor) Query(ctx context.Context, query *dynamodb.QueryInput, optFns ...func(options *Options)) <-chan interface{} {
 	executionFn := e.queryExecution
 	getItemFn := e.queryGetItems
-	nextpageFn := e.queryNextPage
+	nextPageFn := e.queryNextPage
 
-	return execute(ctx, query, optFns, executionFn, getItemFn, nextpageFn)
+	return execute(ctx, query, optFns, executionFn, getItemFn, nextPageFn)
 }
 
-func (e *Executor) Scan(ctx context.Context, query *dynamodb.ScanInput, optFns ...func(options *Options)) chan interface{} {
+// Scan executes a DynamoDB scan. The method returns a channel containing the objects or errors if the execution or unmarshalling fails
+func (e *Executor) Scan(ctx context.Context, scan *dynamodb.ScanInput, optFns ...func(options *Options)) <-chan interface{} {
 	executionFn := e.scanExecution
 	getItemFn := e.scanGetItems
-	nextpageFn := e.scanNextPage
+	nextPageFn := e.scanNextPage
 
-	return execute(ctx, query, optFns, executionFn, getItemFn, nextpageFn)
+	return execute(ctx, scan, optFns, executionFn, getItemFn, nextPageFn)
 }
 
+// WithMapFn returns an options modifier function that sets an unmarshalling method of a Scan or Query execution
 func WithMapFn(mapFn func(map[string]types.AttributeValue) (interface{}, error)) func(options *Options) {
 	return func(options *Options) {
 		options.MapFn = mapFn
 	}
 }
 
-func WithUnmarhshalToItemMapFn[T any]() func(options *Options) {
+// WithUnmarshalToItemMapFn returns an options modifier function that sets an attributevalue unmarshalling .
+// The returned options modifier function can be used in a Query or Scan execution
+func WithUnmarshalToItemMapFn[T any]() func(options *Options) {
 	return WithMapFn(func(m map[string]types.AttributeValue) (interface{}, error) {
 		var item T
 		err := attributevalue.UnmarshalMap(m, &item)
@@ -75,6 +82,8 @@ func WithUnmarhshalToItemMapFn[T any]() func(options *Options) {
 	})
 }
 
+// WithLock will ensure that a lock is refreshed after ever call to the DynamoDB service.
+// The returned options modifier function can be used in a Query or Scan execution
 func WithLock(lock Lock) func(options *Options) {
 	return func(options *Options) {
 		options.Lock = lock
@@ -94,7 +103,7 @@ type executionOutput interface {
 }
 
 func execute[I executionInput, R executionOutput](ctx context.Context, operation *I, optFns []func(options *Options),
-	executionFn func(context.Context, *I) (*R, error), getItemsFn func(*R) []map[string]types.AttributeValue, nextPageFn func(*I, *R) (*I, bool)) chan interface{} {
+	executionFn func(context.Context, *I) (*R, error), getItemsFn func(*R) []map[string]types.AttributeValue, nextPageFn func(*I, *R) (*I, bool)) <-chan interface{} {
 	outputChannel := make(chan interface{}, 1)
 
 	go func() {

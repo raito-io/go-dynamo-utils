@@ -21,85 +21,93 @@ type ExpressionItem interface {
 	Marshal(path *expressionutils.OperationPath, attributeNames map[string]string, attributeValues map[string]interface{}) string
 }
 
-func Exists(attribute expressionutils.AttributePath) *AttributeExistsOperation {
+// Exists creates an AttributeExistsOperation object to represent an `attribute_exists (path)` DynamoDB expression
+func Exists(path expressionutils.AttributePath) *AttributeExistsOperation {
 	return &AttributeExistsOperation{
-		Attribute: attribute,
+		Path: path,
 	}
 }
 
+// AttributeExistsOperation represents an `attribute_exists (path)` DynamoDB expression
 type AttributeExistsOperation struct {
-	Attribute expressionutils.AttributePath
+	Path expressionutils.AttributePath
 }
 
 var _ ExpressionItem = (*AttributeExistsOperation)(nil)
 
 func (o *AttributeExistsOperation) Marshal(path *expressionutils.OperationPath, attributeNames map[string]string, attributeValues map[string]interface{}) string {
-	attributeName := o.Attribute.Marshal(attributeNames)
+	attributeName := o.Path.Marshal(attributeNames)
 
 	return fmt.Sprintf("attribute_exists(%s)", attributeName)
 }
 
 func (o *AttributeExistsOperation) IsConditionExpressionItem() {}
 
-func NotExists(attribute expressionutils.AttributePath) *AttributeNotExistsOperation {
+// NotExists creates an AttributeNotExistsOperation object to represent an `attribute_not_exists (path)` DynamoDB expression
+func NotExists(path expressionutils.AttributePath) *AttributeNotExistsOperation {
 	return &AttributeNotExistsOperation{
-		Attribute: attribute,
+		Path: path,
 	}
 }
 
+// AttributeNotExistsOperation represents an `attribute_not_exists (path)` DynamoDB expression
 type AttributeNotExistsOperation struct {
-	Attribute expressionutils.AttributePath
+	Path expressionutils.AttributePath
 }
 
 var _ ExpressionItem = (*AttributeNotExistsOperation)(nil)
 
 func (o *AttributeNotExistsOperation) Marshal(path *expressionutils.OperationPath, attributeNames map[string]string, attributeValues map[string]interface{}) string {
-	attributeName := o.Attribute.Marshal(attributeNames)
+	attributeName := o.Path.Marshal(attributeNames)
 
 	return fmt.Sprintf("attribute_not_exists(%s)", attributeName)
 }
 
 func (o *AttributeNotExistsOperation) IsConditionExpressionItem() {}
 
-func Type(attribute expressionutils.AttributePath, attributeType AttributeType) *AttributeTypeOperation {
+// Type creates an AttributeTypeOperation object to represent an `attribute_type (path, type)` DynamoDB expression
+func Type(path expressionutils.AttributePath, attributeType AttributeType) *AttributeTypeOperation {
 	return &AttributeTypeOperation{
-		Attribute: attribute,
-		Type:      attributeType,
+		Path: path,
+		Type: attributeType,
 	}
 }
 
+// AttributeTypeOperation represents an `attribute_type (path, type)` DynamoDB expression
 type AttributeTypeOperation struct {
-	Attribute expressionutils.AttributePath
-	Type      AttributeType
+	Path expressionutils.AttributePath
+	Type AttributeType
 }
 
 var _ ExpressionItem = (*AttributeTypeOperation)(nil)
 
 func (o *AttributeTypeOperation) Marshal(path *expressionutils.OperationPath, attributeNames map[string]string, attributeValues map[string]interface{}) string {
-	attributeName := o.Attribute.Marshal(attributeNames)
+	attributeName := o.Path.Marshal(attributeNames)
 
 	return fmt.Sprintf("attribute_type(%s, %s)", attributeName, o.Type)
 }
 
-func BeginsWith(attribute expressionutils.AttributePath, value string) *BeginsWithOperation {
+// BeginsWith creates a BeginsWithOperation object to represent a `begins_with (path, substr)` DynamoDB expression
+func BeginsWith(path expressionutils.AttributePath, substr string) *BeginsWithOperation {
 	return &BeginsWithOperation{
-		Attribute: attribute,
-		Value:     value,
+		Path:   path,
+		Substr: substr,
 	}
 }
 
+// BeginsWithOperation represents a `begins_with (path, substr)` DynamoDB expression
 type BeginsWithOperation struct {
-	Attribute expressionutils.AttributePath
-	Value     string
+	Path   expressionutils.AttributePath
+	Substr string
 }
 
 var _ ExpressionItem = (*BeginsWithOperation)(nil)
 
 func (o *BeginsWithOperation) Marshal(path *expressionutils.OperationPath, attributeNames map[string]string, attributeValues map[string]interface{}) string {
-	attributeName := o.Attribute.Marshal(attributeNames)
+	attributeName := o.Path.Marshal(attributeNames)
 
-	attributeValueName := o.Attribute.ValueName(path, 0)
-	attributeValues[attributeValueName] = o.Value
+	attributeValueName := o.Path.ValueName(path, 0)
+	attributeValues[attributeValueName] = o.Substr
 
 	return fmt.Sprintf("begins_with(%s, %s)", attributeName, attributeValueName)
 }
@@ -108,24 +116,28 @@ func (o *BeginsWithOperation) IsConditionExpressionItem() {}
 
 func (o *BeginsWithOperation) IsRangeKeyConditionExpressionItem() {}
 
+// Contains creates a ContainsOperation object to represent a `contains (path, operand)` DynamoDB expression
+// value must be a string if the attribute is a string. Otherwise, if the attribute is a set value must be of same type as the elements in the set
 func Contains(attribute expressionutils.AttributePath, value interface{}) *ContainsOperation {
 	return &ContainsOperation{
-		Attribute: attribute,
-		Value:     value,
+		Path:  attribute,
+		Value: value,
 	}
 }
 
+// ContainsOperation represents a `contains (path, operand)` DynamoDB expression
+// Value must be a string if the attribute is a string. Otherwise, if the attribute is a set value must be of same type as the elements in the set
 type ContainsOperation struct {
-	Attribute expressionutils.AttributePath
-	Value     interface{}
+	Path  expressionutils.AttributePath
+	Value interface{}
 }
 
 var _ ExpressionItem = (*ContainsOperation)(nil)
 
 func (o *ContainsOperation) Marshal(path *expressionutils.OperationPath, attributeNames map[string]string, attributeValues map[string]interface{}) string {
-	attributeName := o.Attribute.Marshal(attributeNames)
+	attributeName := o.Path.Marshal(attributeNames)
 
-	attributeValueName := o.Attribute.ValueName(path, 0)
+	attributeValueName := o.Path.ValueName(path, 0)
 	attributeValues[attributeValueName] = o.Value
 
 	return fmt.Sprintf("contains(%s, %v)", attributeName, attributeValueName)
@@ -133,24 +145,27 @@ func (o *ContainsOperation) Marshal(path *expressionutils.OperationPath, attribu
 
 func (o *ContainsOperation) IsConditionExpressionItem() {}
 
-func Size(attribute expressionutils.AttributePath) *SizeOperand {
+// Size creates a SizeOperand object to represent a `size (path)` DynamoDB expression
+func Size(path expressionutils.AttributePath) *SizeOperand {
 	return &SizeOperand{
-		Attribute: attribute,
+		Path: path,
 	}
 }
 
+// SizeOperand represents a `size (path)` DynamoDB expression
 type SizeOperand struct {
-	Attribute expressionutils.AttributePath
+	Path expressionutils.AttributePath
 }
 
 var _ ExpressionOperand = (*SizeOperand)(nil)
 
 func (o *SizeOperand) Marshal(attributeNames map[string]string) string {
-	attributeName := o.Attribute.Marshal(attributeNames)
+	attributeName := o.Path.Marshal(attributeNames)
 
 	return fmt.Sprintf("size(%s)", attributeName)
 }
 
+// Equal create an EqualComparisonOperator object to represent a `lh = rh` DynamoDB expression
 func Equal(leftOperand interface{}, rightOperand interface{}) *EqualComparisonOperator {
 	return &EqualComparisonOperator{
 		BinaryComparisonOperator{
@@ -170,6 +185,7 @@ func (o *EqualComparisonOperator) Marshal(path *expressionutils.OperationPath, a
 	return o.marshal(path, EqualComparator, attributeNames, attributeValues)
 }
 
+// NotEqual creates a NotEqualComparisonOperator object to represent a `lh <> rh` DynamoDB expression
 func NotEqual(leftOperand interface{}, rightOperand interface{}) *NotEqualComparisonOperator {
 	return &NotEqualComparisonOperator{
 		BinaryComparisonOperator{
@@ -189,6 +205,7 @@ func (o *NotEqualComparisonOperator) Marshal(path *expressionutils.OperationPath
 	return o.marshal(path, NotEqualComparator, attributeNames, attributeValues)
 }
 
+// LessThan creates a LessThanComparisonOperator object to represent a `lh < rh` DynamoDB expression
 func LessThan(leftOperand interface{}, rightOperand interface{}) *LessThanComparisonOperator {
 	return &LessThanComparisonOperator{
 		BinaryComparisonOperator{
@@ -208,6 +225,7 @@ func (o *LessThanComparisonOperator) Marshal(path *expressionutils.OperationPath
 	return o.marshal(path, LessThanComparator, attributeNames, attributeValues)
 }
 
+// LessOrEqualThan creates a LessOrEqualComparisonOperator object to represent a `lh <= rh` DynamoDB expression
 func LessOrEqualThan(leftOperand interface{}, rightOperand interface{}) *LessOrEqualThanComparisonOperator {
 	return &LessOrEqualThanComparisonOperator{
 		BinaryComparisonOperator{
@@ -227,6 +245,7 @@ func (o *LessOrEqualThanComparisonOperator) Marshal(path *expressionutils.Operat
 	return o.marshal(path, LessOrEqualThanComparator, attributeNames, attributeValues)
 }
 
+// GreaterThan creates a GreaterThanComparisonOperator object to represent a `lh > rh` DynamoDB expression
 func GreaterThan(leftOperand interface{}, rightOperand interface{}) *GreaterThanComparisonOperator {
 	return &GreaterThanComparisonOperator{
 		BinaryComparisonOperator{
@@ -246,6 +265,7 @@ func (o *GreaterThanComparisonOperator) Marshal(path *expressionutils.OperationP
 	return o.marshal(path, GreaterThanComparator, attributeNames, attributeValues)
 }
 
+// GreaterOrEqualThan creates a GreaterOrEqualComparisonOperator object to represent a `lh >= rh` DynamoDB
 func GreaterOrEqualThan(leftOperand interface{}, rightOperand interface{}) *GreaterOrEqualThanComparisonOperator {
 	return &GreaterOrEqualThanComparisonOperator{
 		BinaryComparisonOperator{
@@ -282,6 +302,7 @@ func (o *BinaryComparisonOperator) IsRangeKeyConditionExpressionItem() {}
 
 func (o *BinaryComparisonOperator) IsConditionExpressionItem() {}
 
+// Between creates a BetweenComparisonOperator object to represent `a BETWEEN b AND c` DynamoDB expression
 func Between(attribute expressionutils.AttributePath, value0 interface{}, value1 interface{}) *BetweenComparisonOperator {
 	return &BetweenComparisonOperator{
 		LeftOperand:         attribute,
@@ -311,6 +332,7 @@ func (o *BetweenComparisonOperator) IsRangeKeyConditionExpressionItem() {}
 
 func (o *BetweenComparisonOperator) IsConditionExpressionItem() {}
 
+// In creates a InComparisonOperator object to represent `lh IN (rh...)` DynamoDB expression
 func In(attribute expressionutils.AttributePath, collection ...interface{}) *InComparisonOperator {
 	return &InComparisonOperator{
 		LeftOperand:   attribute,
@@ -339,6 +361,7 @@ func (o *InComparisonOperator) Marshal(path *expressionutils.OperationPath, attr
 
 func (o *InComparisonOperator) IsConditionExpressionItem() {}
 
+// And creates a AndBinaryConditionOperator object to and concat two condition expressions representing `lh AND rh` DynamoDB expression
 func And(leftCondition ConditionItem, rightCondition ConditionItem) *AndBinaryConditionOperator {
 	return &AndBinaryConditionOperator{
 		BinaryCondition: BinaryCondition{
@@ -358,6 +381,7 @@ func (o *AndBinaryConditionOperator) Marshal(path *expressionutils.OperationPath
 	return o.marshal(path, AndConditionOperation, attributeNames, attributeValues)
 }
 
+// Or creates a OrBinaryConditionOperator object to and concat two condition expressions representing `lh OR rh` DynamoDB expression
 func Or(leftCondition ConditionItem, rightCondition ConditionItem) *OrBinaryConditionOperator {
 	return &OrBinaryConditionOperator{
 		BinaryCondition: BinaryCondition{
@@ -391,6 +415,7 @@ func (o *BinaryCondition) marshal(path *expressionutils.OperationPath, operator 
 
 func (*BinaryCondition) IsConditionExpressionItem() {}
 
+// Not create a NotCondition object representing a `NOT condition` DynamoDB expression
 func Not(condition ConditionItem) *NotCondition {
 	return &NotCondition{
 		Condition: condition,
