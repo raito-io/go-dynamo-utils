@@ -23,8 +23,10 @@ jobs:
       - name: Mod Tidy
         run: go mod tidy
 
-      - name: Linting
-        run: make lint
+      - name: Lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: v1.50
 
       - name: Build
         run: go build ./...
