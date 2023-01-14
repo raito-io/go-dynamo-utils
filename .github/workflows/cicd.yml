@@ -23,7 +23,7 @@ jobs:
       - name: Mod Tidy
         run: go mod tidy
 
-      - nname: Linting
+      - name: Linting
         run: make lint
 
       - name: Build
