@@ -23,8 +23,10 @@ jobs:
       - name: Mod Tidy
         run: go mod tidy
 
-      - nname: Linting
-        run: make lint
+      - name: Lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: v1.50
 
       - name: Build
         run: go build ./...
@@ -32,7 +34,7 @@ jobs:
       - name: Test
         run: make test
 
-#      - uses: codecov/codecov-action@v2
-#        with:
-#          token: ${{ secrets.CODECOV_TOKEN }}
-#          file: ./coverage.txt
+      - uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.txt
