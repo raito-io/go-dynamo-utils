@@ -6,7 +6,7 @@ on:
       - v*
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
@@ -33,4 +33,4 @@ jobs:
         run: make test
 
       - name: Publish package
-        run: GOPROXY=proxy.golang.org go list -m example.com/mymodule@${{steps.tag.outputs.tag}}
+        run: GOPROXY=proxy.golang.org go list -m github.com/raito-io/go-dynamo-utils@${{steps.tag.outputs.tag}}
