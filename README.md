@@ -27,3 +27,6 @@
 Add this library as a dependency via `go get github.com/raito-io/go-dynamo-utils`
 
 # Features
+- [Distributed lock](distrlock/README.md): Handle distributed locks by using DynamoDB
+- [Executor](executor/README.md): Easy execution of Query and Scan operations on DynamoDB
+- [Input Builder](inputbuilder/README.md): Build DynamoDB Scan, Query and Update input queries

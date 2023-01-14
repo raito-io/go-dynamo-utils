@@ -379,7 +379,7 @@ func TestAndBinaryConditionOperator_Marshal(t *testing.T) {
 		},
 	},
 		&AttributeExistsOperation{
-			Attribute: "AttributeB",
+			Path: "AttributeB",
 		},
 	)
 	attributeNames := make(map[string]string)
@@ -407,7 +407,7 @@ func TestOrBinaryConditionOperator_Marshal(t *testing.T) {
 		},
 	},
 		&AttributeExistsOperation{
-			Attribute: "AttributeB",
+			Path: "AttributeB",
 		},
 	)
 	attributeNames := make(map[string]string)
@@ -430,7 +430,7 @@ func TestNotCondition_Marshal(t *testing.T) {
 	//given
 	o := Not(&LessThanComparisonOperator{
 		BinaryComparisonOperator: BinaryComparisonOperator{
-			LeftOperand:  &SizeOperand{Attribute: expressionutils.AttributePath("AttributeA")},
+			LeftOperand:  &SizeOperand{Path: expressionutils.AttributePath("AttributeA")},
 			RightOperand: 42,
 		},
 	},

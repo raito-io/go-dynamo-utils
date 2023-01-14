@@ -6,6 +6,8 @@ import (
 	"github.com/raito-io/go-dynamo-utils/inputbuilder/expressionutils"
 )
 
+// Delete create a DeleteOperationItem object, representing a single `DELETE` action
+// https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.UpdateExpressions.html#Expressions.UpdateExpressions.DELETE
 func Delete(path expressionutils.AttributePath, value interface{}) *DeleteOperationItem {
 	return &DeleteOperationItem{
 		Path:  path,
