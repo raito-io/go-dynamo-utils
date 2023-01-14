@@ -1,7 +1,7 @@
 # RAITO - DynamoDB utils
 
 <p align="center">
-    <a href="/LICENSE.md" target="_blank"><img src="https://img.shields.io/badge/license-Apache%202-brightgreen.svg?label=License" alt="Software License" /></a>
+    <a href="/LICENSE" target="_blank"><img src="https://img.shields.io/badge/license-Apache%202-brightgreen.svg?label=License" alt="Software License" /></a>
     <img src="https://img.shields.io/github/v/tag/raito-io/go-dynamo-utils?sort=semver&label=Version&color=651FFF" />
     <a href="https://github.com/raito-io/go-dynamo-utils/actions/workflows/build.yml" target="_blank"><img src="https://img.shields.io/github/actions/workflow/status/raito-io/go-dynamo-utils/build.yml?branch=main" alt="Build status" /></a>
     <a href="https://codecov.io/gh/raito-io/go-dynamo-utils" target="_blank"><img src="https://img.shields.io/codecov/c/github/raito-io/go-dynamo-utils?label=Coverage" alt="Code Coverage" /></a>
