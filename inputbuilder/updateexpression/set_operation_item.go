@@ -94,25 +94,23 @@ func (i *BinaryOperationItem) marshal(operation BinaryOperation, path *expressio
 func (i *BinaryOperationItem) IsValueOperation() {}
 
 // ListAppend creates a ListAppendOperationItem representing a `list_append(path, values)` DynamoDB expression
-func ListAppend(path expressionutils.AttributePath, values ...interface{}) *ListAppendOperationItem {
+func ListAppend(listA interface{}, listB interface{}) *ListAppendOperationItem {
 	return &ListAppendOperationItem{
-		Path:   path,
-		Values: values,
+		ListA: listA,
+		ListB: listB,
 	}
 }
 
 type ListAppendOperationItem struct {
-	Path   expressionutils.AttributePath
-	Values []interface{}
+	ListA interface{}
+	ListB interface{}
 }
 
 func (l *ListAppendOperationItem) Marshal(path *expressionutils.OperationPath, attributeNames map[string]string, attributeValues map[string]interface{}) string {
-	attributeName := l.Path.Marshal(attributeNames)
-	attributeValueName := l.Path.ValueName(path.ExtendPath("append"), 0)
+	listA := marshalOperand(path.ExtendPath("list_append_0"), l.ListA, attributeNames, attributeValues)
+	listB := marshalOperand(path.ExtendPath("list_append_1"), l.ListB, attributeNames, attributeValues)
 
-	attributeValues[attributeValueName] = l.Values
-
-	return fmt.Sprintf("list_append(%s, %s)", attributeName, attributeValueName)
+	return fmt.Sprintf("list_append(%s, %s)", listA, listB)
 }
 
 func (l *ListAppendOperationItem) IsFunctionOperation() {}
