@@ -66,18 +66,18 @@ func TestSetOperationItem_Marshal(t *testing.T) {
 			name: "set a functionOperation",
 			fields: fields{
 				Path: "AttributeA",
-				Value: &ListAppendOperationItem[interface{}]{
-					Path:   "AttributeA",
-					Values: []interface{}{"Element1", "Element2"},
+				Value: &ListAppendOperationItem{
+					ListA: expressionutils.AttributePath("AttributeA"),
+					ListB: []interface{}{"Element1", "Element2"},
 				},
 			},
 			args: args{
 				path: expressionutils.EmptyPath(),
 			},
 			want: want{
-				output:          "#AttributeA = list_append(#AttributeA, :attributea_append_attributea)",
+				output:          "#AttributeA = list_append(#AttributeA, :attributea_list_append_1)",
 				attributeNames:  map[string]string{"#AttributeA": "AttributeA"},
-				attributeValues: map[string]interface{}{":attributea_append_attributea": []interface{}{"Element1", "Element2"}},
+				attributeValues: map[string]interface{}{":attributea_list_append_1": []interface{}{"Element1", "Element2"}},
 			},
 		},
 	}
@@ -247,8 +247,8 @@ func TestSubtractionOperationItem_Marshal(t *testing.T) {
 
 func TestListAppendOperationItem_Marshal(t *testing.T) {
 	type fields struct {
-		Path   expressionutils.AttributePath
-		Values []interface{}
+		ListA interface{}
+		ListB interface{}
 	}
 	type args struct {
 		path *expressionutils.OperationPath
@@ -267,8 +267,8 @@ func TestListAppendOperationItem_Marshal(t *testing.T) {
 		{
 			name: "empty list",
 			fields: fields{
-				Path:   "AttributeA",
-				Values: []interface{}{},
+				ListA: expressionutils.AttributePath("AttributeA"),
+				ListB: []interface{}{},
 			},
 			args: args{
 				path: &expressionutils.OperationPath{
@@ -276,16 +276,16 @@ func TestListAppendOperationItem_Marshal(t *testing.T) {
 				},
 			},
 			want: want{
-				output:          "list_append(#AttributeA, :attributea_append_attributea)",
+				output:          "list_append(#AttributeA, :attributea_list_append_1)",
 				attributeNames:  map[string]string{"#AttributeA": "AttributeA"},
-				attributeValues: map[string]interface{}{":attributea_append_attributea": []interface{}{}},
+				attributeValues: map[string]interface{}{":attributea_list_append_1": []interface{}{}},
 			},
 		},
 		{
 			name: "append list",
 			fields: fields{
-				Path:   "AttributeA",
-				Values: []interface{}{"SomeString", 42, 3.1415},
+				ListA: expressionutils.AttributePath("AttributeA"),
+				ListB: []interface{}{"SomeString", 42, 3.1415},
 			},
 			args: args{
 				path: &expressionutils.OperationPath{
@@ -293,16 +293,33 @@ func TestListAppendOperationItem_Marshal(t *testing.T) {
 				},
 			},
 			want: want{
-				output:          "list_append(#AttributeA, :attributea_append_attributea)",
+				output:          "list_append(#AttributeA, :attributea_list_append_1)",
 				attributeNames:  map[string]string{"#AttributeA": "AttributeA"},
-				attributeValues: map[string]interface{}{":attributea_append_attributea": []interface{}{"SomeString", 42, 3.1415}},
+				attributeValues: map[string]interface{}{":attributea_list_append_1": []interface{}{"SomeString", 42, 3.1415}},
+			},
+		},
+		{
+			name: "append list if not exists",
+			fields: fields{
+				ListA: IfNotExists("AttributeA", []interface{}{}),
+				ListB: []interface{}{"SomeString", 42, 3.1415},
+			},
+			args: args{
+				path: &expressionutils.OperationPath{
+					CurrentOperation: "attributea",
+				},
+			},
+			want: want{
+				output:          "list_append(if_not_exists(#AttributeA, :attributea_list_append_0_ifnotexists_attributea), :attributea_list_append_1)",
+				attributeNames:  map[string]string{"#AttributeA": "AttributeA"},
+				attributeValues: map[string]interface{}{":attributea_list_append_0_ifnotexists_attributea": []interface{}{}, ":attributea_list_append_1": []interface{}{"SomeString", 42, 3.1415}},
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Given
-			o := ListAppend(tt.fields.Path, tt.fields.Values...)
+			o := ListAppend(tt.fields.ListA, tt.fields.ListB)
 			attributeNames := make(map[string]string)
 			attributeValues := make(map[string]interface{})
 

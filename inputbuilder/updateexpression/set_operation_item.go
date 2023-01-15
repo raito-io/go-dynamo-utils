@@ -94,28 +94,26 @@ func (i *BinaryOperationItem) marshal(operation BinaryOperation, path *expressio
 func (i *BinaryOperationItem) IsValueOperation() {}
 
 // ListAppend creates a ListAppendOperationItem representing a `list_append(path, values)` DynamoDB expression
-func ListAppend[I any](path expressionutils.AttributePath, values ...I) *ListAppendOperationItem[I] {
-	return &ListAppendOperationItem[I]{
-		Path:   path,
-		Values: values,
+func ListAppend(listA interface{}, listB interface{}) *ListAppendOperationItem {
+	return &ListAppendOperationItem{
+		ListA: listA,
+		ListB: listB,
 	}
 }
 
-type ListAppendOperationItem[I any] struct {
-	Path   expressionutils.AttributePath
-	Values []I
+type ListAppendOperationItem struct {
+	ListA interface{}
+	ListB interface{}
 }
 
-func (l *ListAppendOperationItem[I]) Marshal(path *expressionutils.OperationPath, attributeNames map[string]string, attributeValues map[string]interface{}) string {
-	attributeName := l.Path.Marshal(attributeNames)
-	attributeValueName := l.Path.ValueName(path.ExtendPath("append"), 0)
+func (l *ListAppendOperationItem) Marshal(path *expressionutils.OperationPath, attributeNames map[string]string, attributeValues map[string]interface{}) string {
+	listA := marshalOperand(path.ExtendPath("list_append_0"), l.ListA, attributeNames, attributeValues)
+	listB := marshalOperand(path.ExtendPath("list_append_1"), l.ListB, attributeNames, attributeValues)
 
-	attributeValues[attributeValueName] = l.Values
-
-	return fmt.Sprintf("list_append(%s, %s)", attributeName, attributeValueName)
+	return fmt.Sprintf("list_append(%s, %s)", listA, listB)
 }
 
-func (l *ListAppendOperationItem[I]) IsFunctionOperation() {}
+func (l *ListAppendOperationItem) IsFunctionOperation() {}
 
 // IfNotExists creates an IfNotExistsOperationItem object representing a `if_not_exists(path, value)` DynamoDB expression
 func IfNotExists(path expressionutils.AttributePath, value interface{}) *IfNotExistsOperationItem {
