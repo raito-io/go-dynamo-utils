@@ -197,23 +197,9 @@ func (b *UpdateBuilder) build(tableName **string, key *map[string]types.Attribut
 		marshalledValues := make(map[string]types.AttributeValue)
 
 		for keyAttributeName, value := range elementsToMarshal {
-			if v, ok := value.(types.AttributeValue); ok {
-				marshalledValues[keyAttributeName] = v
-
-			} else if utils.IsSlice(value) {
-				v, err := marshalList(value)
-				if err != nil {
-					return err
-				}
-
-				marshalledValues[keyAttributeName] = v
-			} else {
-				v, err := attributevalue.Marshal(value)
-				if err != nil {
-					return err
-				}
-
-				marshalledValues[keyAttributeName] = v
+			err := b.marshallElement(value, marshalledValues, keyAttributeName)
+			if err != nil {
+				return err
 			}
 		}
 
@@ -224,6 +210,28 @@ func (b *UpdateBuilder) build(tableName **string, key *map[string]types.Attribut
 				(*expressionAttributeValues)[keyAttributeName] = value
 			}
 		}
+	}
+
+	return nil
+}
+
+func (b *UpdateBuilder) marshallElement(value interface{}, marshalledValues map[string]types.AttributeValue, keyAttributeName string) error {
+	if v, ok := value.(types.AttributeValue); ok {
+		marshalledValues[keyAttributeName] = v
+	} else if utils.IsSlice(value) {
+		v, err := marshalList(value)
+		if err != nil {
+			return err
+		}
+
+		marshalledValues[keyAttributeName] = v
+	} else {
+		v, err := attributevalue.Marshal(value)
+		if err != nil {
+			return err
+		}
+
+		marshalledValues[keyAttributeName] = v
 	}
 
 	return nil
