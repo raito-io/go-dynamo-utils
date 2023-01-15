@@ -66,7 +66,7 @@ func TestSetOperationItem_Marshal(t *testing.T) {
 			name: "set a functionOperation",
 			fields: fields{
 				Path: "AttributeA",
-				Value: &ListAppendOperationItem{
+				Value: &ListAppendOperationItem[interface{}]{
 					Path:   "AttributeA",
 					Values: []interface{}{"Element1", "Element2"},
 				},
