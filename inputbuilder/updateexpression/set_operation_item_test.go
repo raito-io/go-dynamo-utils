@@ -348,3 +348,34 @@ func TestIfNotExistsOperationItem_Marshal(t *testing.T) {
 	require.Equal(t, map[string]string{"#AttributeA": "AttributeA"}, attributeNames)
 	require.Equal(t, map[string]interface{}{":ifnotexists_attributea": 42}, attributeValues)
 }
+
+func TestSetIfNotExists(t *testing.T) {
+	// When
+	result := SetIfNotExists("AttributeA", 42)
+
+	// Then
+	require.Equal(t, &SetOperationItem{
+		Path: "AttributeA",
+		Value: &IfNotExistsOperationItem{
+			Path:  "AttributeA",
+			Value: 42,
+		},
+	}, result)
+}
+
+func TestSetUpsertToList(t *testing.T) {
+	// When
+	result := SetUpsertToList("AttributeA", 3, 14, 15, 42)
+
+	// Then
+	require.Equal(t, &SetOperationItem{
+		Path: "AttributeA",
+		Value: &ListAppendOperationItem{
+			ListA: &IfNotExistsOperationItem{
+				Path:  "AttributeA",
+				Value: []interface{}{},
+			},
+			ListB: []int{3, 14, 15, 42},
+		},
+	}, result)
+}
