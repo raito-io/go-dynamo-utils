@@ -1,6 +1,7 @@
 package inputbuilder
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -169,6 +170,55 @@ func TestUpdateBuilder_BuildUpdateTransactItem(t *testing.T) {
 
 			require.NoError(t, err)
 			require.Equal(t, tt.expectedOutput, input)
+		})
+	}
+}
+
+func Test_marshalList(t *testing.T) {
+	type args struct {
+		list interface{}
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    *types.AttributeValueMemberL
+		wantErr bool
+	}{
+		{
+			name: "empty list",
+			args: args{
+				list: []interface{}{},
+			},
+			want:    &types.AttributeValueMemberL{Value: nil},
+			wantErr: false,
+		},
+		{
+			name: "regular list",
+			args: args{
+				list: []int{1, 2},
+			},
+			want:    &types.AttributeValueMemberL{Value: []types.AttributeValue{&types.AttributeValueMemberN{Value: "1"}, &types.AttributeValueMemberN{Value: "2"}}},
+			wantErr: false,
+		},
+		{
+			name: "mixed list",
+			args: args{
+				list: []interface{}{1, &types.AttributeValueMemberS{Value: "SomeString"}},
+			},
+			want:    &types.AttributeValueMemberL{Value: []types.AttributeValue{&types.AttributeValueMemberN{Value: "1"}, &types.AttributeValueMemberS{Value: "SomeString"}}},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := marshalList(tt.args.list)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("marshalList() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("marshalList() got = %v, want %v", got, tt.want)
+			}
 		})
 	}
 }

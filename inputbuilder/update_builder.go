@@ -2,6 +2,7 @@ package inputbuilder
 
 import (
 	"errors"
+	"reflect"
 	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -12,6 +13,7 @@ import (
 	"github.com/raito-io/go-dynamo-utils/inputbuilder/conditionexpression"
 	"github.com/raito-io/go-dynamo-utils/inputbuilder/expressionutils"
 	"github.com/raito-io/go-dynamo-utils/inputbuilder/updateexpression"
+	"github.com/raito-io/go-dynamo-utils/utils"
 )
 
 // UpdateBuilder is a builder to create dynamodb.UpdateItemInput and types.Update objects
@@ -192,9 +194,27 @@ func (b *UpdateBuilder) build(tableName **string, key *map[string]types.Attribut
 			}
 		}
 
-		marshalledValues, err := attributevalue.MarshalMap(elementsToMarshal)
-		if err != nil {
-			return err
+		marshalledValues := make(map[string]types.AttributeValue)
+
+		for keyAttributeName, value := range elementsToMarshal {
+			if v, ok := value.(types.AttributeValue); ok {
+				marshalledValues[keyAttributeName] = v
+
+			} else if utils.IsSlice(value) {
+				v, err := marshalList(value)
+				if err != nil {
+					return err
+				}
+
+				marshalledValues[keyAttributeName] = v
+			} else {
+				v, err := attributevalue.Marshal(value)
+				if err != nil {
+					return err
+				}
+
+				marshalledValues[keyAttributeName] = v
+			}
 		}
 
 		if *expressionAttributeValues == nil {
@@ -207,6 +227,32 @@ func (b *UpdateBuilder) build(tableName **string, key *map[string]types.Attribut
 	}
 
 	return nil
+}
+
+func marshalList(list interface{}) (*types.AttributeValueMemberL, error) {
+	result := &types.AttributeValueMemberL{}
+
+	value := reflect.ValueOf(list)
+	if value.Kind() != reflect.Slice {
+		return nil, errors.New("not a slice")
+	}
+
+	for i := 0; i < value.Len(); i++ {
+		v := value.Index(i).Interface()
+
+		if av, ok := v.(types.AttributeValue); ok {
+			result.Value = append(result.Value, av)
+		} else {
+			av, err := attributevalue.Marshal(v)
+			if err != nil {
+				return nil, err
+			}
+
+			result.Value = append(result.Value, av)
+		}
+	}
+
+	return result, nil
 }
 
 // BuildUpdateItemInput builds a dynamodb.UpdateItemInput object
