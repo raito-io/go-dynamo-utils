@@ -379,3 +379,35 @@ func TestSetUpsertToList(t *testing.T) {
 		},
 	}, result)
 }
+
+func TestSetIncrement(t *testing.T) {
+	// When
+	result := SetIncrement("AttributeA", 42)
+
+	// Then
+	require.Equal(t, &SetOperationItem{
+		Path: "AttributeA",
+		Value: &AdditionOperationItem{
+			BinaryOperationItem: BinaryOperationItem{
+				LeftOperand:  expressionutils.AttributePath("AttributeA"),
+				RightOperand: 42,
+			},
+		},
+	}, result)
+}
+
+func TestSetDecrement(t *testing.T) {
+	// When
+	result := SetDecrement("AttributeA", 42)
+
+	// Then
+	require.Equal(t, &SetOperationItem{
+		Path: "AttributeA",
+		Value: &SubtractionOperationItem{
+			BinaryOperationItem: BinaryOperationItem{
+				LeftOperand:  expressionutils.AttributePath("AttributeA"),
+				RightOperand: 42,
+			},
+		},
+	}, result)
+}

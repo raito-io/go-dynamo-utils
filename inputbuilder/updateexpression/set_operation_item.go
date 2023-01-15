@@ -167,13 +167,27 @@ func marshalAttributeValue(path *expressionutils.OperationPath, value interface{
 }
 
 // SetIfNotExists set attribute if not exist.
-// This operation creates a SetOperationItem representing `path = if_not_exists(path, value)` DynamoDB expression
+// This operation creates a SetOperationItem representing `path = if_not_exists(path, value)` as DynamoDB expression
 func SetIfNotExists(path expressionutils.AttributePath, value interface{}) *SetOperationItem {
 	return Set(path, IfNotExists(path, value))
 }
 
 // SetUpsertToList upsert values to a list.
-// This operation creates a SetOperationItem representing `path = list_append(if_not_exists(path, :empty_list), values)` DynamoDB expression
+// This operation creates a SetOperationItem representing `path = list_append(if_not_exists(path, :empty_list), values)` as DynamoDB expression
 func SetUpsertToList[I any](path expressionutils.AttributePath, values ...I) *SetOperationItem {
 	return Set(path, ListAppend(IfNotExists(path, []interface{}{}), values))
+}
+
+// SetIncrement increment attribute
+// This operation create a SetOperationItem representing `path = path + value` as DynamoDB expression
+// value could be a scalar or an Operand
+func SetIncrement(path expressionutils.AttributePath, value interface{}) *SetOperationItem {
+	return Set(path, Addition(path, value))
+}
+
+// SetDecrement decrements attribute
+// This operation create a SetOperationItem representing `path = path - value` as DynamoDB expression
+// value could be a scalar or an Operand
+func SetDecrement(path expressionutils.AttributePath, value interface{}) *SetOperationItem {
+	return Set(path, Subtraction(path, value))
 }
