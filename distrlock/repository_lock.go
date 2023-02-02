@@ -3,6 +3,7 @@ package distrlock
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -17,9 +18,6 @@ var SkString = &types.AttributeValueMemberS{Value: "##LOCK##"}
 
 const attributeNameLockId = "lockId"
 const attributeNameTimeout = "timeout"
-
-var ErrTimeout = errors.New("timeout")
-var ErrLockUpdate = errors.New("lock update error")
 
 // Interface validation check
 var _ DynamodbClient = (*dynamodb.Client)(nil)
@@ -245,7 +243,15 @@ func (h *RepositoryLockHandler) lockLookup(ctx context.Context, partition types.
 	}
 
 	if getItemResult != nil {
-		lockKey := getItemResult.Item[attributeNameLockId].(*types.AttributeValueMemberS).Value
+		lockKeyAttribute, found := getItemResult.Item[attributeNameLockId]
+		if !found {
+			return nil, nil, NewDistrLockError(fmt.Sprintf("could not found attribute %s", attributeNameLockId), nil)
+		}
+
+		lockKey, ok := lockKeyAttribute.(*types.AttributeValueMemberS)
+		if !ok {
+			return nil, nil, NewDistrLockError(fmt.Sprintf("attribute %s not of expected type AttributeValueMemberS but was %T", attributeNameLockId, lockKeyAttribute), nil)
+		}
 
 		timeoutNs, err := strconv.ParseInt(getItemResult.Item[attributeNameTimeout].(*types.AttributeValueMemberN).Value, 10, 64)
 		if err != nil {
@@ -254,7 +260,7 @@ func (h *RepositoryLockHandler) lockLookup(ctx context.Context, partition types.
 
 		timeout := time.Duration(timeoutNs) * time.Nanosecond
 
-		return &lockKey, &timeout, nil
+		return &lockKey.Value, &timeout, nil
 	}
 
 	return nil, nil, nil
