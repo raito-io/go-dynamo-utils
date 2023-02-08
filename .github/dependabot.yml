@@ -35,7 +35,7 @@ updates:
     directory: '/'
     schedule:
       interval: 'weekly'
-    open-pull-requests-limit: 3
+    open-pull-requests-limit: 10
     labels:
       - 'gomod'
       - 'dependencies'
