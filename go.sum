@@ -222,8 +222,8 @@ github.com/stretchr/testify v1.8.1 h1:w7B6lhMri9wdJUVmEZPGGhZzrYTPvgJArz7wNPgYKs
 github.com/stretchr/testify v1.8.1/go.mod h1:w2LPCIKwWwSfY2zedu0+kehJoqGctiVI29o6fzry7u4=
 github.com/subosito/gotenv v1.4.0 h1:yAzM1+SmVcz5R4tXGsNMu1jUl2aOJXoiWUCEwwnGrvs=
 github.com/subosito/gotenv v1.4.0/go.mod h1:mZd6rFysKEcUhUHXJk0C/08wAgyDBFuwEYL7vWWGaGo=
-github.com/vektra/mockery/v2 v2.18.0 h1:osTyrUI2RAqSmAr5qHmNiuSPgg+GJgfLc6FjEoi8VKc=
-github.com/vektra/mockery/v2 v2.18.0/go.mod h1:mI12pwT9jEsg04dL0FnZNVkmEgfLgRfu4za9uJDpaRg=
+github.com/vektra/mockery/v2 v2.20.0 h1:/tSAo6+PBWktYELzWVzYaQQTVeomPpAzgBc+7nVz6dU=
+github.com/vektra/mockery/v2 v2.20.0/go.mod h1:mI12pwT9jEsg04dL0FnZNVkmEgfLgRfu4za9uJDpaRg=
 github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.32/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
