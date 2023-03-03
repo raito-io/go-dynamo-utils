@@ -58,7 +58,7 @@ func TestUpdateBuilder_BuildUpdateItemInput(t *testing.T) {
 				Add:                 []*updateexpression.AddOperationItem{updateexpression.Add("attribute2", 5)},
 				Delete:              []*updateexpression.DeleteOperationItem{updateexpression.Delete("attribute3", 10)},
 				Remove:              []expressionutils.AttributePath{"attribute4"},
-				ConditionExpression: nil,
+				ConditionExpression: conditionexpression.Exists("attribute4"),
 			},
 			expectedOutput: &dynamodb.UpdateItemInput{
 				TableName: aws.String("tableName"),
@@ -68,6 +68,7 @@ func TestUpdateBuilder_BuildUpdateItemInput(t *testing.T) {
 				ExpressionAttributeNames:  map[string]string{"#attribute1": "attribute1", "#attribute2": "attribute2", "#attribute3": "attribute3", "#attribute4": "attribute4"},
 				ExpressionAttributeValues: map[string]types.AttributeValue{":set_attribute1": &types.AttributeValueMemberS{Value: "value1"}, ":add_attribute2": &types.AttributeValueMemberN{Value: "5"}, ":delete_attribute3": &types.AttributeValueMemberN{Value: "10"}},
 				UpdateExpression:          aws.String("SET #attribute1 = :set_attribute1 ADD #attribute2 :add_attribute2 DELETE #attribute3 :delete_attribute3 REMOVE #attribute4"),
+				ConditionExpression:       aws.String("attribute_exists(#attribute4)"),
 			},
 			wantErr: false,
 		},

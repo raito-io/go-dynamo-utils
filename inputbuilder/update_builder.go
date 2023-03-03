@@ -85,7 +85,7 @@ func (b *UpdateBuilder) WithConditionExpression(conditionExpression conditionexp
 	b.ConditionExpression = conditionExpression
 }
 
-func (b *UpdateBuilder) build(tableName **string, key *map[string]types.AttributeValue, updateExpression **string, expressionAttributeNames *map[string]string, expressionAttributeValues *map[string]types.AttributeValue) error { //nolint:gocritic
+func (b *UpdateBuilder) build(tableName **string, key *map[string]types.AttributeValue, updateExpression **string, conditionExpression **string, expressionAttributeNames *map[string]string, expressionAttributeValues *map[string]types.AttributeValue) error { //nolint:gocritic
 	if b.TableName == "" && *tableName == nil {
 		return errors.New("tableName may not be empty")
 	}
@@ -182,6 +182,11 @@ func (b *UpdateBuilder) build(tableName **string, key *map[string]types.Attribut
 		}
 	}
 
+	if b.ConditionExpression != nil {
+		expr := b.ConditionExpression.Marshal(expressionutils.EmptyPath(), expressionAttributeNamesTmp, elementsToMarshal)
+		*conditionExpression = &expr
+	}
+
 	if updateExpressionBuilder.Len() > 0 {
 		*updateExpression = aws.String(strings.TrimSpace(updateExpressionBuilder.String()))
 
@@ -265,14 +270,14 @@ func marshalList(list interface{}) (*types.AttributeValueMemberL, error) {
 
 // BuildUpdateItemInput builds a dynamodb.UpdateItemInput object
 func (b *UpdateBuilder) BuildUpdateItemInput(input *dynamodb.UpdateItemInput) error {
-	err := b.build(&input.TableName, &input.Key, &input.UpdateExpression, &input.ExpressionAttributeNames, &input.ExpressionAttributeValues)
+	err := b.build(&input.TableName, &input.Key, &input.UpdateExpression, &input.ConditionExpression, &input.ExpressionAttributeNames, &input.ExpressionAttributeValues)
 
 	return err
 }
 
 // BuildUpdateTransactItem builds a types.Update object that can be used in a dynamodb.TransactWriteItemsInput object
 func (b *UpdateBuilder) BuildUpdateTransactItem(input *types.Update) error {
-	err := b.build(&input.TableName, &input.Key, &input.UpdateExpression, &input.ExpressionAttributeNames, &input.ExpressionAttributeValues)
+	err := b.build(&input.TableName, &input.Key, &input.UpdateExpression, &input.ConditionExpression, &input.ExpressionAttributeNames, &input.ExpressionAttributeValues)
 
 	return err
 }
