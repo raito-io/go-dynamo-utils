@@ -66,7 +66,7 @@ func TestMarshal(t *testing.T) {
 			attributeValues := make(map[string]types.AttributeValue)
 
 			// When
-			output, err := Marshal(tt.args.item, attributeNames, attributeValues)
+			output, err := Marshal(expressionutils.EmptyPath(), tt.args.item, attributeNames, attributeValues)
 
 			// Then
 			if tt.wantErr {

@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 
 	"github.com/raito-io/go-dynamo-utils/inputbuilder/conditionexpression"
+	"github.com/raito-io/go-dynamo-utils/inputbuilder/expressionutils"
 )
 
 // ScanBuilder is a builder to create dynamodb.ScanInput objects
@@ -62,7 +63,7 @@ func (b *ScanBuilder) Build(input *dynamodb.ScanInput) error {
 		input.ExpressionAttributeValues = make(map[string]types.AttributeValue)
 	}
 
-	filterExpressionString, err := conditionexpression.Marshal(b.FilterExpression, input.ExpressionAttributeNames, input.ExpressionAttributeValues)
+	filterExpressionString, err := conditionexpression.Marshal(expressionutils.EmptyPath(), b.FilterExpression, input.ExpressionAttributeNames, input.ExpressionAttributeValues)
 	if err != nil {
 		return err
 	}

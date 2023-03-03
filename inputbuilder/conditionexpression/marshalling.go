@@ -7,13 +7,13 @@ import (
 	"github.com/raito-io/go-dynamo-utils/inputbuilder/expressionutils"
 )
 
-func Marshal(item ExpressionItem, attributeNames map[string]string, attributeValues map[string]types.AttributeValue) (*string, error) {
+func Marshal(path *expressionutils.OperationPath, item ExpressionItem, attributeNames map[string]string, attributeValues map[string]types.AttributeValue) (*string, error) {
 	if item == nil {
 		return nil, nil
 	}
 
 	attributeToMarshal := make(map[string]interface{})
-	expressionString := item.Marshal(expressionutils.EmptyPath(), attributeNames, attributeToMarshal)
+	expressionString := item.Marshal(path, attributeNames, attributeToMarshal)
 
 	for key, value := range attributeToMarshal {
 		switch t := value.(type) {

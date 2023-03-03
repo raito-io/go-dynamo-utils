@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 
 	"github.com/raito-io/go-dynamo-utils/inputbuilder/conditionexpression"
+	"github.com/raito-io/go-dynamo-utils/inputbuilder/expressionutils"
 )
 
 // QueryBuilder is a builder to create dynamodb.QueryInput objects
@@ -93,12 +94,12 @@ func (b *QueryBuilder) Build(queryInput *dynamodb.QueryInput) error {
 		keyConditionExpression = conditionexpression.And(b.HashKeyCondition, b.RangeKeyCondition)
 	}
 
-	keyConditionExpressionString, err := conditionexpression.Marshal(keyConditionExpression, queryInput.ExpressionAttributeNames, queryInput.ExpressionAttributeValues)
+	keyConditionExpressionString, err := conditionexpression.Marshal(expressionutils.EmptyPath().ExtendPath("key"), keyConditionExpression, queryInput.ExpressionAttributeNames, queryInput.ExpressionAttributeValues)
 	if err != nil {
 		return err
 	}
 
-	filterExpressionString, err := conditionexpression.Marshal(b.FilterExpression, queryInput.ExpressionAttributeNames, queryInput.ExpressionAttributeValues)
+	filterExpressionString, err := conditionexpression.Marshal(expressionutils.EmptyPath().ExtendPath("filter"), b.FilterExpression, queryInput.ExpressionAttributeNames, queryInput.ExpressionAttributeValues)
 	if err != nil {
 		return err
 	}

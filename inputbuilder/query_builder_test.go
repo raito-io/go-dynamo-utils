@@ -43,9 +43,9 @@ func TestQueryBuilder_Build(t *testing.T) {
 				queryInput: &dynamodb.QueryInput{
 					TableName:                 aws.String("test-table"),
 					IndexName:                 aws.String("IndexName"),
-					KeyConditionExpression:    aws.String("#AttributeA = :binarycomparison_right"),
+					KeyConditionExpression:    aws.String("#AttributeA = :key_binarycomparison_right"),
 					ExpressionAttributeNames:  map[string]string{"#AttributeA": "AttributeA"},
-					ExpressionAttributeValues: map[string]types.AttributeValue{":binarycomparison_right": &types.AttributeValueMemberS{Value: "PartitionKey"}},
+					ExpressionAttributeValues: map[string]types.AttributeValue{":key_binarycomparison_right": &types.AttributeValueMemberS{Value: "PartitionKey"}},
 					ConsistentRead:            aws.Bool(false),
 				},
 			},
@@ -63,9 +63,9 @@ func TestQueryBuilder_Build(t *testing.T) {
 			want: want{
 				queryInput: &dynamodb.QueryInput{
 					TableName:                 aws.String("test-table"),
-					KeyConditionExpression:    aws.String("(#AttributeA = :andleft_binarycomparison_right AND begins_with(#AttributeB, :andright_attributeb))"),
+					KeyConditionExpression:    aws.String("(#AttributeA = :key_andleft_binarycomparison_right AND begins_with(#AttributeB, :key_andright_attributeb))"),
 					ExpressionAttributeNames:  map[string]string{"#AttributeA": "AttributeA", "#AttributeB": "AttributeB"},
-					ExpressionAttributeValues: map[string]types.AttributeValue{":andleft_binarycomparison_right": &types.AttributeValueMemberS{Value: "PartitionKey"}, ":andright_attributeb": &types.AttributeValueMemberS{Value: "Prefix"}},
+					ExpressionAttributeValues: map[string]types.AttributeValue{":key_andleft_binarycomparison_right": &types.AttributeValueMemberS{Value: "PartitionKey"}, ":key_andright_attributeb": &types.AttributeValueMemberS{Value: "Prefix"}},
 					ConsistentRead:            aws.Bool(true),
 					Limit:                     aws.Int32(100),
 					ScanIndexForward:          aws.Bool(false),
