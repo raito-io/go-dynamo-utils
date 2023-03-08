@@ -49,6 +49,11 @@ func (b *ScanBuilder) WithLimit(limit int32) {
 	b.Limit = &limit
 }
 
+// WithConsistentRead sets the consistent read flag for the dynamodb.QueryInput object
+func (b *ScanBuilder) WithConsistentRead(consistentRead bool) {
+	b.ConsistentRead = consistentRead
+}
+
 // Build builds the dynamodb.ScanInput object
 func (b *ScanBuilder) Build(input *dynamodb.ScanInput) error {
 	if b.TableName == "" && input.TableName == nil {

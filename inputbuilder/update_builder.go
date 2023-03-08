@@ -117,6 +117,10 @@ func (b *UpdateBuilder) build(tableName **string, key *map[string]types.Attribut
 		}
 	}
 
+	return b.buildExpression(conditionExpression, updateExpression, expressionAttributeNames, expressionAttributeValues)
+}
+
+func (b *UpdateBuilder) buildExpression(conditionExpression **string, updateExpression **string, expressionAttributeNames *map[string]string, expressionAttributeValues *map[string]types.AttributeValue) error { //nolint:gocritic
 	expressionAttributeNamesTmp := make(map[string]string)
 
 	var updateExpressionBuilder strings.Builder
