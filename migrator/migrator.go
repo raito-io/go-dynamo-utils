@@ -58,9 +58,10 @@ type Migrator struct {
 
 // NewMigrator creates a new Migrator that can execute a migration.
 // The following parameters are used:
-//  - migrationTableName: specifies the migration metadata table
-//  - migrationOffsetId: requires to ID offset that should be used. IDs are automatically generated based on the order of the parameter 'migrations'. If you want to remove old migrations you need to specify the offset so new IDs are correctly generated.
-//  - migrations: are the migrations to be executed
+//   - migrationTableName: specifies the migration metadata table
+//   - migrationOffsetId: requires to ID offset that should be used. IDs are automatically generated based on the order of the parameter 'migrations'. If you want to remove old migrations you need to specify the offset so new IDs are correctly generated.
+//   - migrations: are the migrations to be executed
+//
 // Migration with an ID that are already successful executed will be skipped.
 // Note that migrations should be idempotent (towards itself). If a migration fails or the update of the metadata table fails, the migration will be retried in the next execution.
 func NewMigrator(migrationTableName string, migrationOffsetId uint64, migrations ...Migration) *Migrator {
