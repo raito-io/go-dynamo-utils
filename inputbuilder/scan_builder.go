@@ -60,17 +60,32 @@ func (b *ScanBuilder) Build(input *dynamodb.ScanInput) error {
 		return errors.New("tableName may not be empty")
 	}
 
-	if input.ExpressionAttributeNames == nil {
-		input.ExpressionAttributeNames = make(map[string]string)
-	}
+	expressionAttributeNamesTmp := make(map[string]string)
+	expressionAttributeValuesTmp := make(map[string]types.AttributeValue)
 
-	if input.ExpressionAttributeValues == nil {
-		input.ExpressionAttributeValues = make(map[string]types.AttributeValue)
-	}
-
-	filterExpressionString, err := conditionexpression.Marshal(expressionutils.EmptyPath(), b.FilterExpression, input.ExpressionAttributeNames, input.ExpressionAttributeValues)
+	filterExpressionString, err := conditionexpression.Marshal(expressionutils.EmptyPath(), b.FilterExpression, expressionAttributeNamesTmp, expressionAttributeValuesTmp)
 	if err != nil {
 		return err
+	}
+
+	if len(expressionAttributeNamesTmp) > 0 {
+		if input.ExpressionAttributeNames == nil {
+			input.ExpressionAttributeNames = expressionAttributeNamesTmp
+		} else {
+			for k, v := range expressionAttributeNamesTmp {
+				input.ExpressionAttributeNames[k] = v
+			}
+		}
+	}
+
+	if len(expressionAttributeValuesTmp) > 0 {
+		if input.ExpressionAttributeValues == nil {
+			input.ExpressionAttributeValues = expressionAttributeValuesTmp
+		} else {
+			for k, v := range expressionAttributeValuesTmp {
+				input.ExpressionAttributeValues[k] = v
+			}
+		}
 	}
 
 	input.TableName = &b.TableName
