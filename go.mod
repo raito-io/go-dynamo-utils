@@ -3,7 +3,7 @@ module github.com/raito-io/go-dynamo-utils
 go 1.18
 
 require (
-	github.com/aws/aws-sdk-go-v2 v1.17.5
+	github.com/aws/aws-sdk-go-v2 v1.17.6
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.10.16
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.18.6
 	github.com/aws/smithy-go v1.13.5
