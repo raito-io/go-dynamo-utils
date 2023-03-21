@@ -43,10 +43,8 @@ func TestNewScanAndUpdateMigration_SimpleMigration(t *testing.T) {
 
 	client := mocks.NewDynamodbClient(t)
 	client.EXPECT().Scan(mock.Anything, &dynamodb.ScanInput{
-		TableName:                 &table,
-		ConsistentRead:            aws.Bool(true),
-		ExpressionAttributeNames:  map[string]string{},
-		ExpressionAttributeValues: map[string]types.AttributeValue{},
+		TableName:      &table,
+		ConsistentRead: aws.Bool(true),
 	}).Return(&dynamodb.ScanOutput{
 		Count: 2,
 		Items: []map[string]types.AttributeValue{
