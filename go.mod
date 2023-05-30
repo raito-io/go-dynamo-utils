@@ -8,7 +8,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.19.7
 	github.com/aws/smithy-go v1.13.5
 	github.com/matoous/go-nanoid/v2 v2.0.0
-	github.com/stretchr/testify v1.8.2
+	github.com/stretchr/testify v1.8.3
 	github.com/vektra/mockery/v2 v2.26.1
 )
 
