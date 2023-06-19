@@ -9,7 +9,7 @@ require (
 	github.com/aws/smithy-go v1.13.5
 	github.com/matoous/go-nanoid/v2 v2.0.0
 	github.com/stretchr/testify v1.8.4
-	github.com/vektra/mockery/v2 v2.29.0
+	github.com/vektra/mockery/v2 v2.30.1
 )
 
 require (
@@ -32,7 +32,6 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.6 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rs/zerolog v1.29.0 // indirect
 	github.com/spf13/afero v1.9.3 // indirect
