@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/aws/aws-sdk-go-v2 v1.21.0
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.10.39
-	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.21.5
+	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.22.0
 	github.com/aws/smithy-go v1.14.2
 	github.com/matoous/go-nanoid/v2 v2.0.0
 	github.com/stretchr/testify v1.8.4
