@@ -9,7 +9,7 @@ require (
 	github.com/aws/smithy-go v1.14.2
 	github.com/matoous/go-nanoid/v2 v2.0.0
 	github.com/stretchr/testify v1.8.4
-	github.com/vektra/mockery/v2 v2.33.2
+	github.com/vektra/mockery/v2 v2.36.0
 )
 
 require (
@@ -22,6 +22,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
+	github.com/huandu/xstrings v1.4.0 // indirect
 	github.com/iancoleman/strcase v0.2.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jinzhu/copier v0.3.5 // indirect
