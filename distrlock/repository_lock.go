@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"math/rand"
 	"strconv"
 	"time"
 
@@ -44,6 +45,7 @@ type RepositoryLockHandler struct {
 	SortKeyValue     types.AttributeValue
 	Timeout          time.Duration
 	RefreshInterval  time.Duration
+	RefreshVariance  time.Duration
 	IdGenerator      IdGenerator
 }
 
@@ -57,8 +59,11 @@ type Options struct {
 	// Timeout stored in distributed lock
 	Timeout *time.Duration
 
-	// RefreshInterval between two lock poll request
+	// RefreshInterval average time between two lock poll request
 	RefreshInterval *time.Duration
+
+	// RefreshVariance variance of the refresh interval between two lock poll request
+	RefreshVariance *time.Duration
 
 	// IdGenerator a generator of unique IDs
 	IdGenerator IdGenerator
@@ -79,6 +84,7 @@ func New(client DynamodbClient, tableName string, partitionKeyName string, optFn
 		SortKeyValue:     SkString,
 		Timeout:          time.Second,
 		RefreshInterval:  time.Millisecond * 200,
+		RefreshVariance:  time.Millisecond * 20,
 	}
 
 	if options.SortKeyName != nil {
@@ -95,6 +101,10 @@ func New(client DynamodbClient, tableName string, partitionKeyName string, optFn
 
 	if options.RefreshInterval != nil {
 		repositoryLock.RefreshInterval = *options.RefreshInterval
+	}
+
+	if options.RefreshVariance != nil {
+		repositoryLock.RefreshVariance = *options.RefreshVariance
 	}
 
 	if options.IdGenerator != nil {
@@ -133,6 +143,14 @@ func WithTimeout(timeout time.Duration) func(options *Options) {
 func WithRefreshInterval(refreshInterval time.Duration) func(options *Options) {
 	return func(options *Options) {
 		options.RefreshInterval = &refreshInterval
+	}
+}
+
+// WithRefreshVariance Specifies a variance of the refresh interval that is used by the lock handler.
+// Default value is 20ms.
+func WithRefreshVariance(refreshVariance time.Duration) func(options *Options) {
+	return func(options *Options) {
+		options.RefreshVariance = &refreshVariance
 	}
 }
 
@@ -187,7 +205,7 @@ func (h *RepositoryLockHandler) Lock(ctx context.Context, partition types.Attrib
 				currentLocktimeout = time.Now().Add(*leaseDuration)
 			}
 
-			sleepContext(ctx, h.RefreshInterval)
+			sleepContext(ctx, h.RefreshInterval, h.RefreshVariance)
 		}
 	}
 }
@@ -362,9 +380,12 @@ func (l *Lock) key() map[string]types.AttributeValue {
 	return l.repository.key(l.partition)
 }
 
-func sleepContext(ctx context.Context, delay time.Duration) {
+func sleepContext(ctx context.Context, delay time.Duration, delayVariance time.Duration) {
+	varianceMilliSecs := rand.Int63n(delayVariance.Milliseconds()*2) - delayVariance.Milliseconds()
+	variance := time.Millisecond * time.Duration(varianceMilliSecs)
+
 	select {
 	case <-ctx.Done():
-	case <-time.After(delay):
+	case <-time.After(delay + variance):
 	}
 }
