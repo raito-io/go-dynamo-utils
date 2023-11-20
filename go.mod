@@ -1,10 +1,10 @@
 module github.com/raito-io/go-dynamo-utils
 
-go 1.18
+go 1.21
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.23.0
-	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.10.39
+	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.12.2
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.25.2
 	github.com/aws/smithy-go v1.17.0
 	github.com/matoous/go-nanoid/v2 v2.0.0
@@ -15,7 +15,7 @@ require (
 require (
 	github.com/aws/aws-sdk-go-v2/internal/configsources v1.2.3 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.5.3 // indirect
-	github.com/aws/aws-sdk-go-v2/service/dynamodbstreams v1.15.5 // indirect
+	github.com/aws/aws-sdk-go-v2/service/dynamodbstreams v1.17.2 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.10.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.8.3 // indirect
 	github.com/chigopher/pathlib v0.15.0 // indirect
