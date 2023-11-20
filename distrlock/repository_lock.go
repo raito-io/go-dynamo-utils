@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"math/rand"
 	"strconv"
+	"sync"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -47,6 +48,8 @@ type RepositoryLockHandler struct {
 	RefreshInterval  time.Duration
 	RefreshVariance  time.Duration
 	IdGenerator      IdGenerator
+
+	mutex sync.Mutex
 }
 
 type Options struct {
@@ -211,6 +214,9 @@ func (h *RepositoryLockHandler) Lock(ctx context.Context, partition types.Attrib
 }
 
 func (h *RepositoryLockHandler) lock(ctx context.Context, partition types.AttributeValue, existingLockId string) (*Lock, bool, error) {
+	h.mutex.Lock()
+	defer h.mutex.Unlock()
+
 	generatedId := h.IdGenerator.ID()
 
 	item := h.key(partition)
@@ -250,6 +256,9 @@ func (h *RepositoryLockHandler) lock(ctx context.Context, partition types.Attrib
 }
 
 func (h *RepositoryLockHandler) lockLookup(ctx context.Context, partition types.AttributeValue) (*string, *time.Duration, error) {
+	h.mutex.Lock()
+	defer h.mutex.Unlock()
+
 	getItemResult, err := h.Client.GetItem(ctx, &dynamodb.GetItemInput{
 		TableName:      &h.TableName,
 		Key:            h.key(partition),
@@ -307,6 +316,9 @@ func (l *Lock) LockId() string {
 
 // Release remove the lock in the database
 func (l *Lock) Release(ctx context.Context) error {
+	l.repository.mutex.Lock()
+	defer l.repository.mutex.Unlock()
+
 	_, err := l.repository.Client.DeleteItem(ctx, &dynamodb.DeleteItemInput{
 		TableName:                 &l.repository.TableName,
 		Key:                       l.key(),
