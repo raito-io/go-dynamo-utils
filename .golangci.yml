@@ -1,6 +1,6 @@
 linters-settings:
   #check:
-    #check-type-assertions: true
+  #check-type-assertions: true
   goconst:
     min-len: 2
     min-occurrences: 3
@@ -54,22 +54,52 @@ linters-settings:
     ignored-functions:
       - 'math.*' # Magic number generation, should be fixed and removed?
 
+  cyclop:
+    max-complexity: 20
+    skip-tests: true
+    package-average: 0.0
+
+  errorlint:
+    errorf: true
+    errorf-multi: true
+    asserts: true
+    comparison: true
+
+  exhaustive:
+    default-signifies-exhaustive: true
+
+  wrapcheck:
+    ignoreSigs:
+      - .Errorf(
+      - errors.New(
+      - errors.Unwrap(
+      - .Wrap(
+      - .Wrapf(
+      - .WithMessage(
+      - .WithMessagef(
+      - .WithStack(
+      - go-multierror.Append(
+
 linters:
   disable-all: true
   enable:
+    - asasalint
     - bodyclose
-    - deadcode
-    - depguard
+    # - cyclop #To be enabled in the future
+    #- depguard #We should create a correct config to enabe depguard
     - dogsled
     - dupl
+    - dupword
+    - durationcheck
     - errcheck
+    - errorlint
     - exportloopref
     - exhaustive
     - forbidigo
     - goconst
     - gocritic
     - gofmt
-    #- goimports #Issues with new version of goimports. Not able to parse issues
+    - goimports
     #- gomnd # Magic numbers should be fixed and enable gomnd,
     - gocyclo
     - gosec
@@ -77,38 +107,31 @@ linters:
     - govet
     - ineffassign
     - misspell
+    - nilerr
     - nolintlint
     - nakedret
     - prealloc
     - predeclared
     - revive
     - staticcheck
-    - structcheck
     - stylecheck
     - thelper
     - tparallel
     - typecheck
     - unconvert
     - unparam
-    - varcheck
+    - unused
     - whitespace
-   # - wrapcheck # 3th party errors should be wrapped to not lose context
     - wsl
 
 run:
   issues-exit-code: 1
   tests: false
-  skip-dirs:
-    - cdk/
-    - graphql/generated/*
-    - global/testing/*
-
-  skip-dirs-use-default: false
 
 output:
   path-prefix: ""
   sort-results: true
-  format: github-actions
-  print-issued-lines: true
+  format: tab
+  print-issued-lines: false
   print-linter-name: true
   uniq-by-line: false
