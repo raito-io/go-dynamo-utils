@@ -401,7 +401,7 @@ func sleepContext(ctx context.Context, delay time.Duration, delayVariance time.D
 		varianceMilliSecs := rand.Int63n(delayVariance.Milliseconds()*2) - delayVariance.Milliseconds()
 		variance = time.Millisecond * time.Duration(varianceMilliSecs)
 	}
-	
+
 	select {
 	case <-ctx.Done():
 	case <-time.After(delay + variance):
