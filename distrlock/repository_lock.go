@@ -395,9 +395,13 @@ func (l *Lock) key() map[string]types.AttributeValue {
 }
 
 func sleepContext(ctx context.Context, delay time.Duration, delayVariance time.Duration) {
-	varianceMilliSecs := rand.Int63n(delayVariance.Milliseconds()*2) - delayVariance.Milliseconds()
-	variance := time.Millisecond * time.Duration(varianceMilliSecs)
+	variance := time.Duration(0)
 
+	if delayVariance > 0 {
+		varianceMilliSecs := rand.Int63n(delayVariance.Milliseconds()*2) - delayVariance.Milliseconds()
+		variance = time.Millisecond * time.Duration(varianceMilliSecs)
+	}
+	
 	select {
 	case <-ctx.Done():
 	case <-time.After(delay + variance):

@@ -168,7 +168,6 @@ func TestLock_TryLock_WithSortKey(t *testing.T) {
 
 func TestLock_Lock_Success(t *testing.T) {
 	// Given
-
 	ctx := context.Background()
 
 	tableName := "tableName"
@@ -214,6 +213,7 @@ func TestLock_Lock_Success(t *testing.T) {
 
 	handler := New(dynamodbClient, tableName, pkName, WithTimeout(time.Millisecond*100),
 		WithRefreshInterval(time.Millisecond*10),
+		WithRefreshVariance(0),
 		MockIdGenerator(t, "UniqueID"),
 	)
 
