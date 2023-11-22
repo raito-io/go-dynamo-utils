@@ -200,7 +200,7 @@ func (h *RepositoryLockHandler) Lock(ctx context.Context, partition types.Attrib
 				return nil, err
 			}
 
-			if *existingLockId != currentLockId {
+			if existingLockId != nil && *existingLockId != currentLockId {
 				currentLockId = *existingLockId
 				currentLocktimeout = time.Now().Add(*leaseDuration)
 			}
