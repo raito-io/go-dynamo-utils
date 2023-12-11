@@ -3,21 +3,21 @@ module github.com/raito-io/go-dynamo-utils
 go 1.21
 
 require (
-	github.com/aws/aws-sdk-go-v2 v1.23.1
-	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.12.2
-	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.25.3
-	github.com/aws/smithy-go v1.17.0
+	github.com/aws/aws-sdk-go-v2 v1.24.0
+	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.12.12
+	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.26.6
+	github.com/aws/smithy-go v1.19.0
 	github.com/matoous/go-nanoid/v2 v2.0.0
 	github.com/stretchr/testify v1.8.4
 	github.com/vektra/mockery/v2 v2.37.1
 )
 
 require (
-	github.com/aws/aws-sdk-go-v2/internal/configsources v1.2.4 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.5.4 // indirect
-	github.com/aws/aws-sdk-go-v2/service/dynamodbstreams v1.17.2 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.10.1 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.8.4 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/configsources v1.2.9 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.5.9 // indirect
+	github.com/aws/aws-sdk-go-v2/service/dynamodbstreams v1.18.5 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.10.4 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.8.10 // indirect
 	github.com/chigopher/pathlib v0.15.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
