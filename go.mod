@@ -3,10 +3,10 @@ module github.com/raito-io/go-dynamo-utils
 go 1.21
 
 require (
-	github.com/aws/aws-sdk-go-v2 v1.23.1
+	github.com/aws/aws-sdk-go-v2 v1.24.0
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.12.2
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.25.3
-	github.com/aws/smithy-go v1.17.0
+	github.com/aws/smithy-go v1.19.0
 	github.com/matoous/go-nanoid/v2 v2.0.0
 	github.com/stretchr/testify v1.8.4
 	github.com/vektra/mockery/v2 v2.37.1
