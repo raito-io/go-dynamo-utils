@@ -6,7 +6,7 @@ require (
 	github.com/aws/aws-sdk-go-v2 v1.24.1
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.12.17
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.27.1
-	github.com/aws/smithy-go v1.19.0
+	github.com/aws/smithy-go v1.20.2
 	github.com/matoous/go-nanoid/v2 v2.0.0
 	github.com/stretchr/testify v1.8.4
 	github.com/vektra/mockery/v2 v2.40.3
