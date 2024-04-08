@@ -10,7 +10,7 @@ require (
 	github.com/aws/smithy-go v1.20.2
 	github.com/matoous/go-nanoid/v2 v2.0.0
 	github.com/stretchr/testify v1.9.0
-	github.com/vektra/mockery/v2 v2.42.1
+	github.com/vektra/mockery/v2 v2.42.2
 )
 
 require (
