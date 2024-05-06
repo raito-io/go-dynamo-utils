@@ -1,12 +1,12 @@
 module github.com/raito-io/go-dynamo-utils
 
 go 1.21
-toolchain go1.22.1
+toolchain go1.22.2
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.26.1
-	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.13.13
-	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.31.1
+	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.13.14
+	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.32.0
 	github.com/aws/smithy-go v1.20.2
 	github.com/matoous/go-nanoid/v2 v2.0.0
 	github.com/stretchr/testify v1.9.0
