@@ -4,7 +4,7 @@ go 1.21
 toolchain go1.22.2
 
 require (
-	github.com/aws/aws-sdk-go-v2 v1.26.1
+	github.com/aws/aws-sdk-go-v2 v1.27.0
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.13.13
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.32.1
 	github.com/aws/smithy-go v1.20.2
